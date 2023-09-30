@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redux Exercise</title>
+    <script src="../redux.min.js"></script>
+    <script src="../immer.umd.production.min.js"></script>
+  </head>
+  <body>
+    <div>
+      <h1><span id="nome"></span></h1>
+      <h2>Email: <span id="email"></span></h2>
+      <h2>Dias: <span id="dias"></span></h2>
+    </div>
+    <div>
+      <h2>Aulas Completas: <span id="aulas"></span></h2>
+    </div>
+
+    <script type="module">
+      import store from "./store/configureStore.js";
+      import {
+        incrementar_tempo,
+        reduzir_tempo,
+        modificar_email,
+      } from "./store/aluno.js";
+      import {
+        completar_aula,
+        completar_curso,
+        resetar_curso,
+      } from "./store/aulas.js";
+
+      function render() {
+        const nome = document.getElementById("nome");
+        nome.innerText = store.getState().aluno.nome;
+        const email = document.getElementById("email");
+        email.innerText = store.getState().aluno.email;
+        const dias = document.getElementById("dias");
+        dias.innerText = store.getState().aluno.diasRestantes;
+
+        const aulas = document.getElementById("aulas");
+        let quant = 0;
+        store.getState().aulas.forEach((x) => {
+          if (x.completa) {
+            quant++;
+          }
+        });
+        aulas.innerText = quant;
+      }
+      render();
+
+      store.subscribe(render);
+
+      store.dispatch(incrementar_tempo());
+      store.dispatch(incrementar_tempo());
+      store.dispatch(reduzir_tempo());
+      store.dispatch(modificar_email("nonakaodaarthur@gmail.com"));
+      store.dispatch(completar_aula(2));
+      store.dispatch(completar_curso());
+      store.dispatch(resetar_curso());
+
+      
+
+    </script>
+  </body>
+</html>
