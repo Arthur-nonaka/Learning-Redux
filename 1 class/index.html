@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redux</title>
+    <script src="./redux.min.js"></script>
+  </head>
+  <body>
+    <div>
+      <h1>Total: <span id="total"></span></h1>
+      <button id="button">Add</button>
+      <button id="buttonSub">Sub</button>
+      <br><hr>
+      <button id="buttonOpen">Open</button>
+      <button id="buttonClose">Close</button>
+    </div>
+    <script>
+      //MAKE EVERYTHING BEAUTY
+
+      //CONST
+      const SOMAR = "SOMAR";
+      const SUBTRAIR = "SUBTRAIR";
+      const ABRIR = "ABIR";
+      const FECHAR = "FECHAR";
+
+      //ACTION FUNCTION CREATOR
+      function subtrair(payload) {
+        return { type: SUBTRAIR, payload };
+      }
+      function somar(payload) {
+        return { type: SOMAR, payload };
+      }
+      function abrir() {
+        return { type: ABRIR };
+      }
+      function fechar() {
+        return { type: FECHAR };
+      }
+
+      //-------------------------
+
+      function contador(state = 0, action) {
+        switch (action.type) {
+          case SUBTRAIR:
+            return state - action.payload;
+          case SOMAR:
+            return state + action.payload;
+          default:
+            return state;
+        }
+      }
+
+      function modal(state = false, action) {
+        switch (action.type) {
+          case ABRIR:
+            return true;
+          case FECHAR:
+            return false;
+          default:
+            return state;
+        }
+      }
+
+      const reducer = Redux.combineReducers({ contador, modal });
+      const store = Redux.createStore(reducer);
+
+      function render() {
+        const { contador, modal } = store.getState();
+        const total = document.getElementById("total");
+        total.innerText = contador;
+        if (modal) {
+          total.style.display = "inline-block";
+        } else {
+          total.style.display = "none";
+        }
+      }
+      render();
+
+      store.subscribe(render);
+
+      const button = document.getElementById("button");
+      button.addEventListener("click", () => store.dispatch(somar(2)));
+
+      const buttonSub = document.getElementById("buttonSub");
+      buttonSub.addEventListener("click", () => store.dispatch(subtrair(2)));
+
+      const buttonOpen = document.getElementById("buttonOpen");
+      buttonOpen.addEventListener("click", () => store.dispatch(abrir()));
+
+      const buttonClose = document.getElementById("buttonClose");
+      buttonClose.addEventListener("click", () => store.dispatch(fechar()));
+
+
+    </script>
+  </body>
+</html>
