@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redux</title>
+    <script src="../redux.min.js"></script>
+  </head>
+  <body>
+    <h1>Nome: <span id="name"></span></h1>
+    <script>
+      //CONST
+      const MUDAR_NOME = "MUDAR_NOME";
+
+      function mudar_nome(payload) {
+        return { type: MUDAR_NOME, payload };
+      }
+
+      const initialState = {
+        name: "Arthur",
+        idade: 17,
+      };
+
+      function reducer(state = initialState, action) {
+        switch (action.type) {
+          case MUDAR_NOME:
+            return { ...state, name: action.payload };
+          default:
+            return state;
+        }
+      }
+
+      const store = Redux.createStore(
+        reducer,
+        window.__REDUX_DEVTOOLS_EXTENSION__ &&
+          window.__REDUX_DEVTOOLS_EXTENSION__()
+      );
+
+      function render() {
+        const name = document.getElementById("name");
+        name.innerText = store.getState().name;
+      }
+      store.subscribe(render);
+
+      store.dispatch(mudar_nome("Jhon"));
+      store.dispatch(mudar_nome("Pedro"));
+      store.dispatch(mudar_nome("Matheus"));
+    </script>
+  </body>
+</html>
